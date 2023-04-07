@@ -1,10 +1,12 @@
 .shop-container {
+  max-width: 100%;
   display: grid;
   /* first div takes 4fr of the total and second div takes 1 fr */
   grid-template-columns: 4fr 1fr;
 }
 
 .products-container {
+  width: 60%;
   margin: 50px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
