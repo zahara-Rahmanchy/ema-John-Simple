@@ -1,27 +1,32 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Cart from "../Cart/Cart";
 import "./Order.css";
-import { useLoaderData } from "react-router-dom";
+import {Link, useLoaderData} from "react-router-dom";
 
 import ReviewItem from "../ReviewItem/ReviewItem";
-import { removeFromDb } from "../../utilities/fakedb";
+import {deleteShoppingCart, removeFromDb} from "../../utilities/fakedb";
 const Order = () => {
   const savedCart = useLoaderData();
   // to delete items from cart
   const [cart, setCart] = useState(savedCart);
 
-  const handleRemoveFromCart = (id) => {
-    console.log(id);
-    const remaining = cart.filter((product) => product.id !== id);
+  const handleRemoveFromCart = id => {
+    // console.log(id);
+    const remaining = cart.filter(product => product.id !== id);
     setCart(remaining);
     removeFromDb(id);
+  };
+
+  const handleClearCart = () => {
+    setCart([]);
+    deleteShoppingCart();
   };
 
   return (
     <div className="shop-container">
       {/* Total order: {product.length} */}
       <div className="reviewContainer">
-        {savedCart.map((pd) => (
+        {savedCart.map(pd => (
           <ReviewItem
             key={pd.id}
             product={pd}
@@ -30,7 +35,9 @@ const Order = () => {
         ))}
       </div>
       <div className="cart-container">
-        <Cart cart={cart}></Cart>
+        <Cart cart={cart} handleClearCart={handleClearCart}>
+          <Link to="/checkout"> Proceed to Checkout</Link>
+        </Cart>
       </div>
     </div>
   );

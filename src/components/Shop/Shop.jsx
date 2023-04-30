@@ -1,7 +1,12 @@
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
-import { addToDb, getShoppingCart } from "../../utilities/fakedb";
+import {useEffect} from "react";
+import {useState} from "react";
+import {Link} from "react-router-dom";
+import {
+  addToDb,
+  deleteShoppingCart,
+  getShoppingCart,
+} from "../../utilities/fakedb";
 import Cart from "../Cart/Cart";
 import Products from "../Products/Products";
 import "./Shop.css";
@@ -11,26 +16,26 @@ const Shop = () => {
 
   useEffect(() => {
     fetch("products.json")
-      .then((res) => res.json())
-      .then((data) => setProducts(data));
+      .then(res => res.json())
+      .then(data => setProducts(data));
   }, []);
 
   //   add to cart function
-  const handleAddToCart = (product) => {
-    console.log(product);
+  const handleAddToCart = product => {
+    // console.log(product);
     // first copy the old cart using ...cart and then add the new product
     // const newCart = [...cart, product];
 
     // if product doesn;t exist then add quantity, if it does then update by 1
     let newCart = [];
-    const exists = cart.find((pd) => pd.id === product.id);
+    const exists = cart.find(pd => pd.id === product.id);
 
     if (!exists) {
       product.quantity = 1;
       newCart = [...cart, product];
     } else {
       exists.quantity = exists.quantity + 1;
-      const remaining = cart.filter((pro) => pro.id !== product.id);
+      const remaining = cart.filter(pro => pro.id !== product.id);
       newCart = [...remaining, exists];
     }
     setCart(newCart);
@@ -38,16 +43,16 @@ const Shop = () => {
   };
 
   useEffect(() => {
-    console.log("products array from useState", products);
+    // console.log("products array from useState", products);
     const savedCart = [];
     const storedCart = getShoppingCart();
     // console.log(storedCart);
     // step`1 get id of product from stored cart
     for (const id in storedCart) {
-      console.log("id", id);
+      // console.log("id", id);
       //step 2 get product using id
-      const addedProduct = products.find((product) => product.id === id);
-      console.log("before adding:", addedProduct);
+      const addedProduct = products.find(product => product.id === id);
+      // console.log("before adding:", addedProduct);
       // step 3: get quantity
       if (addedProduct) {
         const quantity = storedCart[id];
@@ -55,15 +60,21 @@ const Shop = () => {
         // step4 added the addedProduct to savedcart
         savedCart.push(addedProduct);
       }
-      console.log("after adding:", addedProduct);
+      // console.log("after adding:", addedProduct);
     }
     // step5
     setCart(savedCart);
   }, [products]);
+
+  const handleClearCart = () => {
+    setCart([]);
+    deleteShoppingCart();
+  };
+
   return (
     <div className="shop-container">
       <div className="products-container">
-        {products.map((pro) => (
+        {products.map(pro => (
           <Products
             key={pro.id}
             product={pro}
@@ -72,7 +83,9 @@ const Shop = () => {
         ))}
       </div>
       <div className="cart-container">
-        <Cart cart={cart}></Cart>
+        <Cart cart={cart} handleClearCart={handleClearCart}>
+          <Link to="/order"> Review Order</Link>
+        </Cart>
       </div>
     </div>
   );

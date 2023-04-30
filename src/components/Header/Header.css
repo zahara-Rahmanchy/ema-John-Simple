@@ -23,7 +23,16 @@ nav.header a:hover {
   list-style: none;
   display: flex;
 }
-
+.email {
+  color: white;
+  padding: 5px;
+  margin: 10px;
+  background-color: cornflowerblue;
+  border-radius: 5px;
+}
+.header button {
+  background-color: rgb(249, 153, 84);
+}
 /* .links {
   position: absolute;
   left: 65rem;
